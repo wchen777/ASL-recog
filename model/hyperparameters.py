@@ -9,7 +9,7 @@ Number of epochs. If you experiment with more complex networks you
 might need to increase this. Likewise if you add regularization that
 slows training.
 """
-num_epochs = 60
+num_epochs = 100
 
 """
 A critical parameter that can dramatically affect whether training
@@ -27,7 +27,7 @@ momentum = 0.01
 Resize image size for task 1. Task 3 must have an image size of 224,
 so that is hard-coded elsewhere.
 """
-img_size = 224
+img_size = 200
 
 """
 Sample size for calculating the mean and standard deviation of the
@@ -52,4 +52,4 @@ batch_size = 10
 """
 The number of image scene classes. Don't change this.
 """
-num_classes = 15
+num_classes = 26
