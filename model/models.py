@@ -55,30 +55,44 @@ class YourModel(tf.keras.Model):
         #             explicitly reshape any tensors anywhere in your network.
 
         self.architecture = [
-            Conv2D(64, (9, 9), 5, activation='relu', padding="valid", input_shape=(hp.img_size, hp.img_size, 3)),
-            # 224 - 9 = 215
-            # 215 / 5 = 43
-            # + 1 = 44, (44 x 44 x 64)
-            MaxPool2D((2, 2), 3, padding="valid"),
-            # ((44 - 2) / 3) + 1 = 15 x 15 x 64
-            Conv2D(128, (3, 3), 1, activation='relu', padding="valid", input_shape=(15, 15, 64)),
-            # (15 - 2) / 1 + 1 = 14
-            MaxPool2D((2, 2), 1, padding="valid"),
-            # 14 - 3 + 1 = 12
-            Conv2D(256, (3, 3), 1, activation='relu', padding="same", input_shape=(12, 12, 128)),
-            # size 12 x 12 x 256 from same padding
-            Conv2D(128, (3, 3), 1, activation='relu', padding="valid", input_shape=(12, 12, 256)),
-            # 12 - 3 + 1 = 10 x 10 x 128
-            Flatten(),
-            Dense(1024, activation='relu'),
-            Dropout(0.4),
-            Dense(512, activation='relu'),
-            Dense(15, activation='softmax')]
+            # Conv2D(64, (9, 9), 5, activation='relu', padding="valid", input_shape=(hp.img_size, hp.img_size, 3)),
+            # # 224 - 9 = 215
+            # # 215 / 5 = 43
+            # # + 1 = 44, (44 x 44 x 64)
+            # MaxPool2D((2, 2), 3, padding="valid"),
+            # # ((44 - 2) / 3) + 1 = 15 x 15 x 64
+            # Conv2D(128, (3, 3), 1, activation='relu', padding="valid", input_shape=(15, 15, 64)),
+            # # (15 - 2) / 1 + 1 = 14
+            # MaxPool2D((2, 2), 1, padding="valid"),
+            # # 14 - 3 + 1 = 12
+            # Conv2D(256, (3, 3), 1, activation='relu', padding="same", input_shape=(12, 12, 128)),
+            # # size 12 x 12 x 256 from same padding
+            # Conv2D(128, (3, 3), 1, activation='relu', padding="valid", input_shape=(12, 12, 256)),
+            # # 12 - 3 + 1 = 10 x 10 x 128
+            # Flatten(),
+            # Dense(1024, activation='relu'),
+            # Dropout(0.4),
+            # Dense(512, activation='relu'),
+            # Dense(15, activation='softmax')
+
+
+
+        ]
+        self.head = [
+            # TODO: fully connected stuff here
+            Dense(26, activation='softmax')
+        ]
 
     def call(self, x):
         """ Passes input image through the network. """
-
         for layer in self.architecture:
+            x = layer(x)
+
+        return x
+
+    def class_MLP_head(self, x):
+        """ use MLP classification head """
+        for layer in self.head:
             x = layer(x)
 
         return x

@@ -220,7 +220,7 @@ def main():
     #     model.vgg16.load_weights(ARGS.load_vgg, by_name=True)
 
     # Load checkpoints
-    if ARGS.load_checkpoint is not None
+    if ARGS.load_checkpoint is not None:
         model.load_weights(ARGS.load_checkpoint, by_name=False)
 
     # Make checkpoint directory if needed
