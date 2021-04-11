@@ -71,13 +71,14 @@ class Datasets():
         # Import images
         for i, file_path in enumerate(file_list):
             img = Image.open(file_path)
-            img = img.resize((hp.img_size, hp.img_size))
+            # convert to grayscale
+            img = img.resize((hp.img_size, hp.img_size)).convert('L')
             img = np.array(img, dtype=np.float32)
             img /= 255.
 
-            # Grayscale -> RGB
-            if len(img.shape) == 2:
-                img = np.stack([img, img, img], axis=-1)
+            # # Grayscale -> RGB
+            # if len(img.shape) == 2:
+            #     img = np.stack([img, img, img], axis=-1)
 
             data_sample[i] = img
 
@@ -86,17 +87,14 @@ class Datasets():
         #       self.mean and self.std respectively.
         # ==========================================================
 
-        self.mean = data_sample.mean(axis=(0, 1, 2))
-        self.std = data_sample.std(axis=(0, 1, 2))
+        self.mean = data_sample.mean(axis=(0, 1))
+        self.std = data_sample.std(axis=(0, 1))
         print(self.mean)
-       # print(self.std)
+        # print(self.std)
         # ==========================================================
 
-        print("Dataset mean: [{0:.4f}, {1:.4f}, {2:.4f}]".format(
-            self.mean[0], self.mean[1], self.mean[2]))
-
-        print("Dataset std: [{0:.4f}, {1:.4f}, {2:.4f}]".format(
-            self.std[0], self.std[1], self.std[2]))
+        print("Dataset mean: ", self.mean)
+        print("Dataset std: ", self.std)
 
     def standardize(self, img):
         """ Function for applying standardization to an input image.
@@ -113,9 +111,7 @@ class Datasets():
         #       the standardization.
         # =============================================================
 
-        img[:, :, 0] = (img[:, :, 0] - self.mean[0]) / self.std[0]
-        img[:, :, 1] = (img[:, :, 1] - self.mean[1]) / self.std[1]
-        img[:, :, 2] = (img[:, :, 2] - self.mean[2]) / self.std[2]
+        img = (img - self.mean) / self.std
 
         # =============================================================
 

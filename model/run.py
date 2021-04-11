@@ -33,12 +33,12 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="ASL recognition model",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # parser.add_argument(
-    #     '--task',
-    #     required=True,
-    #     choices=['1', '3'],
-    #     help='''Which task of the assignment to run -
-    #     training from scratch (1), or fine tuning VGG-16 (3).''')
+    parser.add_argument(
+        '--task',
+        required=True,
+        choices=['1', '3'],
+        help='''Which task of the assignment to run -
+        training from scratch (1), or fine tuning VGG-16 (3).''')
     parser.add_argument(
         '--data',
         default='..'+os.sep+'data'+os.sep,
@@ -67,10 +67,10 @@ def parse_args():
         help='''Skips training and evaluates on the test set once.
         You can use this to test an already trained model by loading
         its checkpoint.''')
-    parser.add_argument(
-        '--lime-image',
-        default='test/Bedroom/image_0003.jpg',
-        help='''Name of an image in the dataset to use for LIME evaluation.''')
+    # parser.add_argument(
+    #     '--lime-image',
+    #     default='test/Bedroom/image_0003.jpg',
+    #     help='''Name of an image in the dataset to use for LIME evaluation.''')
 
     return parser.parse_args()
 

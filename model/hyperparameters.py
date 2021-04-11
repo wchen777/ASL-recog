@@ -27,7 +27,7 @@ momentum = 0.01
 Resize image size for task 1. Task 3 must have an image size of 224,
 so that is hard-coded elsewhere.
 """
-img_size = 200
+img_size = 205
 
 """
 Sample size for calculating the mean and standard deviation of the
