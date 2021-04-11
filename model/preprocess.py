@@ -82,11 +82,6 @@ class Datasets():
 
             data_sample[i] = img
 
-        # TODO: Calculate the pixel-wise mean and standard deviation
-        #       of the images in data_sample and store them in
-        #       self.mean and self.std respectively.
-        # ==========================================================
-
         self.mean = data_sample.mean(axis=(0, 1))
         self.std = data_sample.std(axis=(0, 1))
         print(self.mean)
@@ -105,11 +100,6 @@ class Datasets():
         Returns:
             img - numpy array of shape (image size, image size, 3)
         """
-
-        # TODO: Standardize the input image. Use self.mean and self.std
-        #       that were calculated in calc_mean_and_std() to perform
-        #       the standardization.
-        # =============================================================
 
         img = (img - self.mean) / self.std
 
@@ -135,16 +125,6 @@ class Datasets():
         else:
             img = img / 255.
             img = self.standardize(img)
-
-        # EXTRA CREDIT:
-        # Write your own custom data augmentation procedure, creating
-        # an effect that cannot be achieved using the arguments of
-        # ImageDataGenerator. This can potentially boost your accuracy
-        # in the validation set. Note that this augmentation should
-        # only be applied to some input images, so make use of the
-        # 'random' module to make sure this happens. Also, make sure
-        # that ImageDataGenerator uses *this* function for preprocessing
-        # on augmented data.
 
         if random.random() < 0.3:
             img = img + tf.random.uniform(
@@ -173,11 +153,6 @@ class Datasets():
         """
 
         if augment:
-            # TODO: Use the arguments of ImageDataGenerator()
-            #       to augment the data. Leave the
-            #       preprocessing_function argument as is unless
-            #       you have written your own custom preprocessing
-            #       function (see custom_preprocess_fn()).
             #
             # Documentation for ImageDataGenerator: https://bit.ly/2wN2EmK
             #
