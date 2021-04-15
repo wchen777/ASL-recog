@@ -1,0 +1,1 @@
+ls | gshuf -n 150 | xargs -I {} mv {} ../../test/F
