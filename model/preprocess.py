@@ -74,7 +74,6 @@ class Datasets():
             # convert to grayscale
             img = img.resize((hp.img_size, hp.img_size))
             img = np.array(img, dtype=np.float32)
-            print(img.shape)
             img /= 255.
 
             # # Grayscale -> RGB
@@ -83,8 +82,8 @@ class Datasets():
 
             data_sample[i] = img
 
-        self.mean = data_sample.mean(axis=0)
-        self.std = data_sample.std(axis=0)
+        self.mean = data_sample.mean(axis=(0, 1, 2))
+        self.std = data_sample.std(axis=(0, 1, 2))
         # ==========================================================
 
         print("Dataset mean: [{0:.4f}, {1:.4f}, {2:.4f}]".format(
