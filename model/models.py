@@ -21,9 +21,9 @@ class YourModel(tf.keras.Model):
             name='Adam')
 
         self.architecture = [
-            Conv2D(64, (5, 5), 2, activation='relu', padding='valid', input_shape=(hp.img_size, hp.img_size)),
+            Conv2D(128, (5, 5), 2, activation='relu', padding='valid', input_shape=(hp.img_size, hp.img_size, 3)),
             # 205 - 5, / 2 = 100 + 1
-            Conv2D(64, (3, 3), 2, activation='relu', padding='valid', input_shape=(101, 101, 64)),
+            Conv2D(128, (3, 3), 2, activation='relu', padding='valid', input_shape=(101, 101, 128)),
             # 101 - 3, / 2 = 49 + 1 = 50
             MaxPool2D((2, 2), 2, padding="valid"),
             Dropout(0.25),

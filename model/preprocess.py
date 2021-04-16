@@ -72,13 +72,14 @@ class Datasets():
         for i, file_path in enumerate(file_list):
             img = Image.open(file_path)
             # convert to grayscale
-            img = img.resize((hp.img_size, hp.img_size)).convert('L')
+            img = img.resize((hp.img_size, hp.img_size))
             img = np.array(img, dtype=np.float32)
+            print(img.shape)
             img /= 255.
 
             # # Grayscale -> RGB
-            # if len(img.shape) == 2:
-            #     img = np.stack([img, img, img], axis=-1)
+            if len(img.shape) == 2:
+                img = np.stack([img, img, img], axis=-1)
 
             data_sample[i] = img
 
@@ -86,8 +87,11 @@ class Datasets():
         self.std = data_sample.std(axis=0)
         # ==========================================================
 
-        print("Dataset mean: ", self.mean)
-        print("Dataset std: ", self.std)
+        print("Dataset mean: [{0:.4f}, {1:.4f}, {2:.4f}]".format(
+            self.mean[0], self.mean[1], self.mean[2]))
+
+        print("Dataset std: [{0:.4f}, {1:.4f}, {2:.4f}]".format(
+            self.std[0], self.std[1], self.std[2]))
 
     def standardize(self, img):
         """ Function for applying standardization to an input image.
@@ -99,7 +103,9 @@ class Datasets():
             img - numpy array of shape (image size, image size, 3)
         """
 
-        img = (img - self.mean) / self.std
+        img[:, :, 0] = (img[:, :, 0] - self.mean[0]) / self.std[0]
+        img[:, :, 1] = (img[:, :, 1] - self.mean[1]) / self.std[1]
+        img[:, :, 2] = (img[:, :, 2] - self.mean[2]) / self.std[2]
 
         # =============================================================
 
