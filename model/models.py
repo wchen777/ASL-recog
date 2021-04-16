@@ -82,8 +82,8 @@ class YourModel(tf.keras.Model):
         #        activation="relu", name="block5_conv3"),
         # MaxPool2D(2, name="block5_pool"),
         self.architecture = [
-            Conv2D(64, (3, 3), 1, activation='relu', padding='same', input_shape=(hp.img_size, hp.img_size, 3)),
-            Conv2D(64, (3, 3), 1, activation='relu', padding='same'),
+            Conv2D(64, (5, 5), 1, activation='relu', padding='same', input_shape=(hp.img_size, hp.img_size, 3)),
+            Conv2D(64, (5, 5), 1, activation='relu', padding='same'),
             MaxPool2D((4, 4), 2),
             Dropout(0.2),
             Conv2D(128, (3, 3), 1, activation='relu', padding='same'),
@@ -149,5 +149,4 @@ class YourModel(tf.keras.Model):
     @staticmethod
     def loss_fn(labels, predictions):
         """ Loss function for the model. """
-
         return tf.keras.losses.sparse_categorical_crossentropy(labels, predictions)
