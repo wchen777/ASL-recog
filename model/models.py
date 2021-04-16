@@ -84,9 +84,12 @@ class YourModel(tf.keras.Model):
         self.architecture = [
             Conv2D(64, (3, 3), 1, activation='relu', padding='same', input_shape=(hp.img_size, hp.img_size, 3)),
             Conv2D(64, (3, 3), 1, activation='relu', padding='same'),
+            MaxPool2D((4, 4), 2),
+            Conv2D(128, (3, 3), 1, activation='relu', padding='same'),
+            Conv2D(128, (3, 3), 1, activation='relu', padding='same'),
             MaxPool2D((2, 2), 2),
-            Conv2D(128, (3, 3), 1, activation='relu', padding='same'),
-            Conv2D(128, (3, 3), 1, activation='relu', padding='same'),
+            Conv2D(256, (3, 3), 1, activation='relu', padding='same'),
+            Conv2D(256, (3, 3), 1, activation='relu', padding='same'),
             MaxPool2D((2, 2), 2),
             Conv2D(256, (3, 3), 1, activation='relu', padding='same'),
             Conv2D(256, (3, 3), 1, activation='relu', padding='same'),
@@ -97,9 +100,9 @@ class YourModel(tf.keras.Model):
             Flatten(),
             Dense(1024, activation='relu'),
             Dropout(0.4),
-            Dense(1024, activation='relu'),
-            Dropout(0.4),
             Dense(512, activation='relu'),
+            Dropout(0.4),
+            Dense(256, activation='relu'),
             Dense(26, activation='softmax')
         ]
 
