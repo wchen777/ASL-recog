@@ -66,7 +66,7 @@ class Datasets():
 
         # Allocate space in memory for images
         data_sample = np.zeros(
-            (hp.preprocess_sample_size, hp.img_size, hp.img_size))
+            (hp.preprocess_sample_size, hp.img_size, hp.img_size, 3))
 
         # Import images
         for i, file_path in enumerate(file_list):
