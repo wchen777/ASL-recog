@@ -16,7 +16,6 @@ deeplab = models.segmentation.deeplabv3_resnet50(pretrained=False,
                                                  progress=True,
                                                  num_classes=2)
 
-
 # we use model module from torchvision to get the deeplabv3_resnet50 model.
 # We specify the number of classes usingnum_classes as two because we will generate two grayscale images,
 # one for predicting region with hands and another with no hands.
@@ -65,8 +64,8 @@ class SegDataset(Dataset):
 
 # EGOdataset = SegDataset(os.path.join('data', 'egodata'), 'images', 'masks')
 
-HOFdataset = SegDataset(os.path.join('data', 'hand_over_face'), 'images_resized', 'masks')
-GTEAdataset = SegDataset(os.path.join('data', 'gtea'), 'Images', 'Masks')
+HOFdataset = SegDataset(os.path.join('segdata', 'hand_over_face'), 'images_resized', 'masks')
+GTEAdataset = SegDataset(os.path.join('segdata', 'gtea'), 'Images', 'Masks')
 
 # combine dataset
 megaDataset = ConcatDataset([HOFdataset, GTEAdataset])
@@ -158,7 +157,7 @@ def training_loop(n_epochs, optimizer, lr_scheduler, model, loss_fn, train_loade
     pixelacctest = []
     prevEpoch = 0
 
-    if lastCkptPath != None:
+    if lastCkptPath is not None:
         checkpoint = torch.load(lastCkptPath)
         prevEpoch = checkpoint['epoch']
         model.load_state_dict(checkpoint['state_dict'])
@@ -245,14 +244,13 @@ def training_loop(n_epochs, optimizer, lr_scheduler, model, loss_fn, train_loade
 # call the training loop,
 # make sure to pass correct checkpoint path, or none if starting with the training
 
-retval = training_loop(3,
+retval = training_loop(10,
                        optimizer,
                        lr_scheduler,
                        model,
                        loss_fn,
                        trainLoader,
-                       valLoader,
-                       'checkpoints/checkpointhandseg.pt')
+                       valLoader,)
 
 
 # after the training loop returns, we can plot the data
