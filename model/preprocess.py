@@ -82,8 +82,8 @@ class Datasets():
 
             data_sample[i] = img
 
-        self.mean = data_sample.mean(axis=(0, 1))
-        self.std = data_sample.std(axis=(0, 1))
+        self.mean = data_sample.mean(axis=(0, 1, 2))
+        self.std = data_sample.std(axis=(0, 1, 2))
         print(self.mean)
         # print(self.std)
         # ==========================================================

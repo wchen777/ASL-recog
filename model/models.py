@@ -46,6 +46,8 @@ class YourModel(tf.keras.Model):
             Dense(512, activation='relu'),
             Dropout(0.4),
             Dense(256, activation='relu'),
+            Dropout(0.2),
+            Dense(256, activation='relu'),
             Dense(26, activation='softmax')
         ]
 
