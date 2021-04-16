@@ -16,6 +16,7 @@ deeplab = models.segmentation.deeplabv3_resnet50(pretrained=False,
                                                  progress=True,
                                                  num_classes=2)
 
+
 # we use model module from torchvision to get the deeplabv3_resnet50 model.
 # We specify the number of classes usingnum_classes as two because we will generate two grayscale images,
 # one for predicting region with hands and another with no hands.
@@ -136,6 +137,10 @@ def pixelAcc(target, predicted):
 
 
 model = HandSegModel()
+
+if torch.cuda.is_available():
+    model.cuda()
+
 optimizer = optim.Adam(model.parameters(), lr=0.00005)
 loss_fn = nn.BCEWithLogitsLoss()
 lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=0.8)
@@ -250,7 +255,7 @@ retval = training_loop(10,
                        model,
                        loss_fn,
                        trainLoader,
-                       valLoader,)
+                       valLoader, )
 
 
 # after the training loop returns, we can plot the data
@@ -272,4 +277,3 @@ for i in ax:
         j.legend()
         j.grid(True)
 plt.show()
-
