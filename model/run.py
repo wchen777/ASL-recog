@@ -12,7 +12,7 @@ from datetime import datetime
 import tensorflow as tf
 
 import hyperparameters as hp
-from models import YourModel, VGGModel
+from models import YourModel
 from preprocess import Datasets
 from skimage.transform import resize
 from tensorboard_utils import \
