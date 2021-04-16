@@ -95,11 +95,11 @@ class YourModel(tf.keras.Model):
             Conv2D(512, (3, 3), 1, activation='relu', padding='same'),
             MaxPool2D((2, 2), 2),
             Flatten(),
-            Dense(4096, activation='relu'),
+            Dense(1024, activation='relu'),
             Dropout(0.4),
-            Dense(2048, activation='relu'),
+            Dense(1024, activation='relu'),
             Dropout(0.4),
-            Dense(1000, activation='relu'),
+            Dense(512, activation='relu'),
             Dense(26, activation='softmax')
         ]
 
