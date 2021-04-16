@@ -100,9 +100,9 @@ class YourModel(tf.keras.Model):
             Flatten(),
             Dense(1024, activation='relu'),
             Dropout(0.4),
-            Dense(512, activation='relu'),
+            Dense(1024, activation='relu'),
             Dropout(0.4),
-            Dense(256, activation='relu'),
+            Dense(512, activation='relu'),
             Dense(26, activation='softmax')
         ]
 
