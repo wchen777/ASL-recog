@@ -240,7 +240,7 @@ def training_loop(n_epochs, optimizer, lr_scheduler, model, loss_fn, train_loade
             'MeanIOU test': meanioutest,
             'PixelAcc test': pixelacctest
         }
-        torch.save(checkpoint, 'checkpoints/checkpointhandseg' + str(epoch + 1 + prevEpoch) + '.pt')
+        torch.save(checkpoint, 'checkpointhandseg' + str(epoch + 1 + prevEpoch) + '.pt')
         lr_scheduler.step()
 
     return tr_loss_arr, val_loss_arr, meanioutrain, pixelacctrain, meanioutest, pixelacctest
@@ -249,7 +249,7 @@ def training_loop(n_epochs, optimizer, lr_scheduler, model, loss_fn, train_loade
 # call the training loop,
 # make sure to pass correct checkpoint path, or none if starting with the training
 
-retval = training_loop(10,
+retval = training_loop(1,
                        optimizer,
                        lr_scheduler,
                        model,
