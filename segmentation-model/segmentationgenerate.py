@@ -3,7 +3,26 @@ import cv2
 import numpy as np
 from torchvision import transforms
 from PIL import Image
-from .handsegmentation import HandSegModel
+from torchvision import models, transforms
+import torch.nn as nn
+
+deeplab = models.segmentation.deeplabv3_resnet50(pretrained=False,
+                                                 progress=True,
+                                                 num_classes=2)
+
+
+# we use model module from torchvision to get the deeplabv3_resnet50 model.
+# We specify the number of classes usingnum_classes as two because we will generate two grayscale images,
+# one for predicting region with hands and another with no hands.
+
+class HandSegModel(nn.Module):
+    def __init__(self):
+        super(HandSegModel, self).__init__()
+        self.dl = deeplab
+
+    def forward(self, x):
+        y = self.dl(x)['out']
+        return y
 
 
 # can pass np array or path to image file
@@ -18,7 +37,7 @@ def SegmentHands(pathtest):
                                      transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
     Xtest = preprocess(img)
 
-    checkpoint = torch.load('checkpoints/checkpointhandseg7.pt')
+    checkpoint = torch.load('checkpointhandseg1.pt', map_location=torch.device('cpu'))
     model = HandSegModel()
     model.load_state_dict(checkpoint['state_dict'])
     with torch.no_grad():
@@ -50,23 +69,56 @@ def getColoredMask(image, mask):
     return masked
 
 
-cap = cv2.VideoCapture(0)
-i = 0
-while True:
-    ret, frame = cap.read()
+def getMaskedImage(image, mask):
+    black_mask = np.zeros_like(image)
+    # print(black_mask[:, :, 0].shape)
+    # print(mask.shape)
+    log = mask.astype('uint8') != 0.
+    # print(image[:, :, 0][log])
+    black_mask[:, :, 0] = image[:, :, 0] * log
+    black_mask[:, :, 1] = image[:, :, 1] * log
+    black_mask[:, :, 2] = image[:, :, 2] * log
+    return black_mask
 
-    frame = cv2.resize(frame, (384, 288))
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    if i % 5 == 0:
-        i = 0
-        mask = SegmentHands(rgb)
-        colmask = getColoredMask(frame, mask)
 
-    cv2.imshow('color', np.hstack((frame, colmask)))
-    key = cv2.waitKey(24)
-    if key & 0xFF == ord('q'):
-        break
-    i += 1
-cap.release()
-cv2.destroyAllWindows()
+def readImage(img_path):
+    im = cv2.imread(img_path)
+    im = cv2.resize(im, (384, 288))
+    rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+
+    mask = SegmentHands(rgb)
+    # colmask = getColoredMask(im, mask)
+
+    blacked = getMaskedImage(im, mask)
+    cv2.imwrite('asdf.jpg', np.hstack((im, blacked)))
+
+    # colmask = getColoredMask(im, mask)
+    # cv2.imshow('color', np.hstack((im, colmask)))
+
+
+readImage('robertB.jpeg')
+
+
+
+
+
+# cap = cv2.VideoCapture(0)
+# i = 0
+# while True:
+#     ret, frame = cap.read()
+#
+#     frame = cv2.resize(frame, (384, 288))
+#     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#     if i % 5 == 0:
+#         i = 0
+#         mask = SegmentHands(rgb)
+#         colmask = getColoredMask(frame, mask)
+#
+#     cv2.imshow('color', np.hstack((frame, colmask)))
+#     key = cv2.waitKey(24)
+#     if key & 0xFF == ord('q'):
+#         break
+#     i += 1
+# cap.release()
+# cv2.destroyAllWindows()
 
