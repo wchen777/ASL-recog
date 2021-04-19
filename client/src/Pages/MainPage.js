@@ -8,14 +8,17 @@ import {
   Container,
   Center,
   Button,
-  Heading
+  Heading,
+  HStack
 } from '@chakra-ui/react';
 import axios from 'axios'
+import ClassificationCard from '../components/ClassificationCard';
 
 export default function MainPage() {
 
   const [topThree, setTopThree] = useState({})
   const [segmentImg, setSegmentImg] = useState()
+  const [cardData, setCardData] = useState([])
 
   const [loading, setLoading] = useState(false)
   const url = "http://localhost:5000"
@@ -40,7 +43,7 @@ export default function MainPage() {
 
     setInterval(() => {
       sendData()
-    }, 10000)
+    }, 2000)
 
   }, [])
 
@@ -48,8 +51,8 @@ export default function MainPage() {
 
   const sendData = () => {
     const canvas = document.createElement('canvas')
-    console.log(videoRef.current.videoHeight)
-    console.log(videoRef.current.videoWidth)
+    // console.log(videoRef.current.videoHeight)
+    // console.log(videoRef.current.videoWidth)
     canvas.height = videoRef.current.videoHeight - 90
     canvas.width = videoRef.current.videoWidth - 220
     const ctx = canvas.getContext('2d')
@@ -63,7 +66,7 @@ export default function MainPage() {
       config
     )
       .then((response) => {
-        console.log(response.data.classifications)
+        // console.log(response.data.classifications)
         setTopThree(response.data.classifications.map(l => String.fromCharCode(97 + l)))
       })
       .catch((err) => {
@@ -103,9 +106,17 @@ export default function MainPage() {
       setLoading(false)
   }
 
+  const createCard = () => {
+    let classification = topThree[0]
+    let snapshot = videoRef.current
+    setCardData([...cardData, {classification, pic: snapshot}])
+  }
+
+  const cardList = cardData.map((card, index) => <ClassificationCard key={index} card={card}/>)
 
   return (
     <>
+    <Heading color="blue.600" fontWeight="bold" fontSize="50px" mb={10}> ASL Recognition </Heading>
       <Center mt={8} marginRight="120px" mb={0} pb={0}>
         <div className="container">
           <video
@@ -128,14 +139,18 @@ export default function MainPage() {
             Third Match: {topThree ? topThree[2] : ""}
           </Heading>
 
-          <Button colorScheme="blue" onClick={() => segment()} isLoading={loading}>
+          <Button colorScheme="blue" onClick={() => createCard()} isLoading={loading}>
             Create Card for Boberto
           </Button>
 
         </VStack>
       </Center>
       
-      <img src={`data:image/png;base64,${segmentImg}`} />
+      {/* <Heading mb="50px"> Cards </Heading> */}
+      <HStack overflowX="scroll" mb="100px" mx="100px" spacing="40px">
+        {cardList}
+      </HStack>
+      {/* <img src={`data:image/png;base64,${segmentImg}`} /> */}
 
     </>
     // <Container textAlign="center">

@@ -18,7 +18,7 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
-      <ColorModeSwitcher justifySelf="flex-end" />
+      <ColorModeSwitcher justifySelf="flex-end" mt={4}/>
       <MainPage/>
         {/* <Grid minH="100vh" p={3}>
           
