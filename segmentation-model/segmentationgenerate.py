@@ -96,7 +96,7 @@ def readImage(img_path):
     # cv2.imshow('color', np.hstack((im, colmask)))
 
 
-readImage('robertB.jpeg')
+readImage('hand2.png')
 
 
 
