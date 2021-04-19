@@ -1,0 +1,8 @@
+data
+**/.idea
+segmentation-model/segdata
+*.pt
+logs
+checkpoints
+**/node_modules
+*.h5

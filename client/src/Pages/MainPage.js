@@ -1,89 +1,151 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
-    ChakraProvider,
-    Box,
-    Text,
-    Link,
-    VStack,
-    Code,
-    Grid,
-    theme,
-    Container,
-    Center,
-    Button
+  ChakraProvider,
+  VStack,
+  Code,
+  Grid,
+  theme,
+  Container,
+  Center,
+  Button,
+  Heading
 } from '@chakra-ui/react';
 import axios from 'axios'
 
 export default function MainPage() {
-    const videoRef = useRef();
-    //good
-    useEffect(() => {
-        navigator.mediaDevices
-            .getUserMedia({
-                video: true
-            })
-            .then((stream) => {
-                videoRef.current.srcObject = stream
-            })
-        const canvas = document.createElement('canvas')
-        // console.log(videoRef.current.videoHeight)
-        // console.log(videoRef.current.videoWidth)
-        canvas.height = videoRef.current.videoHeight
-        canvas.width = videoRef.current.videoWidth
-        const ctx = canvas.getContext('2d')
-        // setInterval(() => {
-        //     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
-        // })
 
+  const [topThree, setTopThree] = useState({})
+  const [segmentImg, setSegmentImg] = useState()
 
-    }, [])
+  const [loading, setLoading] = useState(false)
+  const url = "http://localhost:5000"
 
-
-
-    const sendData = () => {
-        const canvas = document.createElement('canvas')
-        console.log(videoRef.current.videoHeight)
-        console.log(videoRef.current.videoWidth)
-        canvas.height = videoRef.current.videoHeight - 90
-        canvas.width = videoRef.current.videoWidth - 220
-        // canvas.height = 600
-        // canvas.width = 600
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
-        const image = canvas.toDataURL()
-        console.log(image)
-
-
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': '*',
     }
+  }
 
+  const videoRef = useRef();
 
-    return (
-        <>
-            <Center my={8} marginRight="120px">
-                <div className="container">
-                    <video
-                        id="vid"
-                        width="600"
-                        height="600"
-                        autoPlay
-                        ref={videoRef}
-                    // style={{ width: 600 }}
-                    ></video>
-                </div>
-            </Center>
-            <Button colorScheme="blue" onClick={() => sendData()}>
-                Boberto
-            </Button>
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true
+      })
+      .then((stream) => {
+        videoRef.current.srcObject = stream
+      })
 
-        </>
-        // <Container textAlign="center">
-        //     <Center my={8} marginRight="80px">
+    setInterval(() => {
+      sendData()
+    }, 10000)
 
-        //         
-        //     </Center>
+  }, [])
 
 
 
-        // </Container>
+  const sendData = () => {
+    const canvas = document.createElement('canvas')
+    console.log(videoRef.current.videoHeight)
+    console.log(videoRef.current.videoWidth)
+    canvas.height = videoRef.current.videoHeight - 90
+    canvas.width = videoRef.current.videoWidth - 220
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
+    const image = canvas.toDataURL()
+
+    let data = { image: image.split(';base64,')[1] }
+    axios.post(
+      url + '/classify',
+      data,
+      config
     )
+      .then((response) => {
+        console.log(response.data.classifications)
+        setTopThree(response.data.classifications.map(l => String.fromCharCode(97 + l)))
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+  const segment = () => {
+    setLoading(true)
+    const canvas = document.createElement('canvas')
+    console.log(videoRef.current.videoHeight)
+    console.log(videoRef.current.videoWidth)
+    canvas.height = videoRef.current.videoHeight - 90
+    canvas.width = videoRef.current.videoWidth - 220
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height)
+    const image = canvas.toDataURL()
+
+    let data = { image: image.split(';base64,')[1] }
+
+    axios.post(
+      url + '/segment',
+      data,
+      config
+    )
+      .then((response) => {
+        console.log(response)
+        // const blob = response.data.blob()
+        // const url = URL.createObjectURL(blob)
+        setSegmentImg(response.data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      setLoading(false)
+  }
+
+
+  return (
+    <>
+      <Center mt={8} marginRight="120px" mb={0} pb={0}>
+        <div className="container">
+          <video
+            id="vid"
+            width="600"
+            height="600"
+            autoPlay
+            ref={videoRef}
+          // style={{ width: 600 }}
+          ></video>
+        </div>
+        <VStack pl="100px" pb="180px" spacing="50px">
+          <Heading fontSize="45px">
+            First Match: {topThree ? <span className="class-label"> {topThree[0]} </span> : ""}
+          </Heading>
+          <Heading fontSize="35px">
+            Second Match: {topThree ? topThree[1] : ""}
+          </Heading>
+          <Heading fontSize="25px">
+            Third Match: {topThree ? topThree[2] : ""}
+          </Heading>
+
+          <Button colorScheme="blue" onClick={() => segment()} isLoading={loading}>
+            Create Card for Boberto
+          </Button>
+
+        </VStack>
+      </Center>
+      
+      <img src={`data:image/png;base64,${segmentImg}`} />
+
+    </>
+    // <Container textAlign="center">
+    //     <Center my={8} marginRight="80px">
+
+    //         
+    //     </Center>
+
+
+
+    // </Container>
+  )
 }
