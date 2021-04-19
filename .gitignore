@@ -1,7 +1,0 @@
-data
-**/.idea
-segmentation-model/segdata
-*.pt
-logs
-checkpoints
-*.h5
