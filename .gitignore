@@ -3,6 +3,7 @@ data
 segmentation-model/segdata
 *.pt
 logs
-checkpoints
 **/node_modules
 *.h5
+backend/build
+backend/static

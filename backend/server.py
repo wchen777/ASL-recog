@@ -7,16 +7,17 @@ from PIL import Image
 from backend.predict_classification import process_image, predict, init_model
 from backend.predict_segmentation import *
 
-app = Flask(__name__, template_folder='./public')
+app = Flask(__name__, template_folder='./build')
 CORS(app)
 
 model = init_model()
 
 
 # # home endpoint, render html file
-# @app.route('/')
-# def render():
-#     return render_template('index.html')
+@app.route('/')
+def render():
+    return render_template('index.html')
+
 
 # classification endpoint
 @app.route('/classify', methods=['POST'])

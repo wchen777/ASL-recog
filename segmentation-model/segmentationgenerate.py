@@ -90,13 +90,13 @@ def readImage(img_path):
     # colmask = getColoredMask(im, mask)
 
     blacked = getMaskedImage(im, mask)
-    cv2.imwrite('asdf.jpg', np.hstack((im, blacked)))
+    cv2.imwrite('test.png', np.hstack((im, blacked)))
 
     # colmask = getColoredMask(im, mask)
-    # cv2.imshow('color', np.hstack((im, colmask)))
+    cv2.imshow('color', np.hstack((im, blacked)))
 
 
-readImage('hand2.png')
+readImage('overfit.jpg')
 
 
 
